@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0f766e" />
+  <title>Comparador de Bicicletas</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home" data-route="home" aria-label="Início">🚲 <span>Comparador de Bicicletas</span></a>
+    <span class="storage-status" id="storageStatus">Salvamento local ativo</span>
+  </header>
+
+  <main class="container">
+    <section id="homeView" class="view active" aria-labelledby="homeTitle">
+      <div class="hero">
+        <p class="eyebrow">Pesquisa de compra</p>
+        <h1 id="homeTitle">Compare bikes sem perder nenhuma informação</h1>
+        <p>Registre preços, componentes, garantia e suas impressões. Tudo fica salvo neste navegador automaticamente.</p>
+      </div>
+      <div class="action-grid">
+        <button class="action-card primary" data-action="add"><span>＋</span><strong>Adicionar bike</strong><small>Registrar uma nova opção</small></button>
+        <button class="action-card" data-action="edit"><span>✎</span><strong>Editar uma bike</strong><small>Ver e alterar dados salvos</small></button>
+        <button class="action-card" data-action="export-one"><span>⤓</span><strong>Exportar uma bike</strong><small>Copiar relatório em Markdown</small></button>
+        <button class="action-card" data-action="export-all"><span>▦</span><strong>Exportar todas</strong><small>Copiar tabela comparativa em Markdown</small></button>
+      </div>
+      <section class="summary-panel">
+        <div><h2>Suas bicicletas</h2><p id="bikeCount">Nenhuma bike cadastrada ainda.</p></div>
+        <button class="text-button" id="clearAllBtn">Limpar todos os dados</button>
+      </section>
+      <div id="recentBikes" class="card-grid"></div>
+    </section>
+
+    <section id="selectorView" class="view" aria-labelledby="selectorTitle">
+      <div class="page-head"><div><p class="eyebrow" id="selectorKicker">Seleção</p><h1 id="selectorTitle">Escolha uma bicicleta</h1><p id="selectorHelp">Selecione uma opção para continuar.</p></div><button class="secondary" data-route="home">← Início</button></div>
+      <div id="selectorBikes" class="card-grid"></div>
+      <p id="emptySelector" class="empty-state" hidden>Nenhuma bicicleta cadastrada. Adicione uma opção primeiro.</p>
+    </section>
+
+    <section id="formView" class="view" aria-labelledby="formTitle">
+      <div class="page-head"><div><p class="eyebrow" id="formMode">Nova pesquisa</p><h1 id="formTitle">Adicionar bicicleta</h1><p>Os campos são salvos automaticamente enquanto você digita.</p></div><button class="secondary" data-route="home">← Início</button></div>
+      <form id="bikeForm" novalidate>
+        <input type="hidden" id="bikeId" />
+        <section class="form-section">
+          <h2>Identificação e compra</h2>
+          <div class="fields three">
+            <label>Loja<input name="loja" placeholder="Ex.: Bike Center" autocomplete="organization" /></label>
+            <label>Marca da bike<input name="marca" placeholder="Ex.: Absolute" /></label>
+            <label>Modelo<input name="modelo" placeholder="Ex.: Nero 5" /></label>
+            <label>Tamanho do quadro<input name="tamanhoQuadro" placeholder="Ex.: 19" /></label>
+            <label>Cor<input name="cor" placeholder="Ex.: preto e cinza" /></label>
+            <label>Tipo de uso pretendido<select name="uso"><option value="">Selecione</option><option>Urbano/passeio</option><option>Urbano e terra leve</option><option>Trilhas leves</option><option>Trilhas técnicas</option></select></label>
+            <label>Preço à vista (R$)<input name="precoVista" type="number" min="0" step="0.01" placeholder="999,90" /></label>
+            <label>Preço total a prazo (R$)<input name="precoPrazo" type="number" min="0" step="0.01" placeholder="1.199,00" /></label>
+            <label>Parcelamento sem juros<input name="parcelamento" placeholder="Ex.: 10x de R$ 99,99" /></label>
+            <label>Formas de pagamento<input name="pagamento" placeholder="Pix, cartão, dinheiro..." /></label>
+            <label>Frete/entrega (R$)<input name="frete" type="number" min="0" step="0.01" placeholder="0" /></label>
+            <label>Custo de montagem/revisão (R$)<input name="montagem" type="number" min="0" step="0.01" placeholder="0" /></label>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2>Quadro, suspensão e direção</h2>
+          <div class="fields three">
+            <label>Marca/modelo do quadro<input name="quadro" placeholder="Ex.: GTI Roma" /></label>
+            <label>Material do quadro<input name="materialQuadro" placeholder="Ex.: alumínio 6061-T6" /></label>
+            <label>Garantia do quadro<input name="garantiaQuadro" placeholder="Ex.: 3 meses" /></label>
+            <label>Marca/modelo da suspensão/garfo<input name="garfo" placeholder="Ex.: Yamada / Zoom" /></label>
+            <label>Tipo e curso da suspensão<input name="suspensao" placeholder="Ex.: mola, 80 mm, sem trava" /></label>
+            <label>Caixa de direção<input name="caixaDirecao" placeholder="Ex.: semi-integrada, aheadset" /></label>
+            <label>Guidão<input name="guidao" placeholder="Ex.: Absolute 31,8 mm" /></label>
+            <label>Mesa/avanço<input name="mesa" placeholder="Ex.: Absolute, 60 mm" /></label>
+            <label>Canote e abraçadeira<input name="canote" placeholder="Marca, diâmetro e material" /></label>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2>Rodas, pneus e freios</h2>
+          <div class="fields three">
+            <label>Marca/modelo dos aros<input name="aros" placeholder="Ex.: Belumi, parede dupla" /></label>
+            <label>Cubo dianteiro<input name="cuboDianteiro" placeholder="Alumínio, esferado/rolamentado" /></label>
+            <label>Cubo traseiro<input name="cuboTraseiro" placeholder="Alumínio, esferado/rolamentado" /></label>
+            <label>Roda traseira<select name="sistemaTraseiro"><option value="">Selecione</option><option>Cassete/K7</option><option>Roda livre rosqueada</option><option>Não informado</option></select></label>
+            <label>Raios<input name="raios" placeholder="Ex.: 32 raios, inox 2.0" /></label>
+            <label>Pneus<input name="pneus" placeholder="Ex.: 29x2.1 (54-622), marca/modelo" /></label>
+            <label>Freio dianteiro<input name="freioDianteiro" placeholder="Ex.: disco mecânico 160 mm" /></label>
+            <label>Freio traseiro<input name="freioTraseiro" placeholder="Ex.: disco mecânico 160 mm" /></label>
+            <label>Marca dos freios/manetes<input name="freiosMarca" placeholder="Ex.: Absolute / Shimano" /></label>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2>Transmissão</h2>
+          <div class="fields three">
+            <label>Número de velocidades<input name="velocidades" placeholder="Ex.: 21v (3x7)" /></label>
+            <label>Trocadores/alavancas<input name="trocadores" placeholder="Ex.: Absolute Rapid Fire" /></label>
+            <label>Câmbio dianteiro<input name="cambioDianteiro" placeholder="Marca e modelo" /></label>
+            <label>Câmbio traseiro<input name="cambioTraseiro" placeholder="Marca e modelo" /></label>
+            <label>Catraca/cassete<input name="catraca" placeholder="Ex.: 7v, 14–28 dentes" /></label>
+            <label>Corrente<input name="corrente" placeholder="Marca/modelo" /></label>
+            <label>Pedivela<input name="pedivela" placeholder="Marca, material e dentes" /></label>
+            <label>Movimento central<input name="movimentoCentral" placeholder="Ex.: ponta quadrada/rolamentado" /></label>
+            <label>Pedais<input name="pedais" placeholder="Marca, material e tipo" /></label>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2>Conforto, garantia e avaliação</h2>
+          <div class="fields three">
+            <label>Selim/banco<input name="selim" placeholder="Ex.: Commander" /></label>
+            <label>Peso informado (kg)<input name="peso" type="number" min="0" step="0.1" placeholder="14.9" /></label>
+            <label>Limite de peso (kg)<input name="limitePeso" type="number" min="0" step="1" placeholder="120" /></label>
+            <label>Garantia de suspensão/garfo<input name="garantiaGarfo" placeholder="Ex.: 3 meses" /></label>
+            <label>Garantia dos componentes<input name="garantiaComponentes" placeholder="Ex.: 30 dias" /></label>
+            <label>Pós-venda/revisão inclusa<input name="posVenda" placeholder="Ex.: revisão após 30 dias" /></label>
+            <label>Nota pessoal (0–10)<input name="nota" type="number" min="0" max="10" step="0.5" placeholder="8" /></label>
+            <label>Estado da montagem<select name="montagemStatus"><option value="">Selecione</option><option>Montada e regulada na loja</option><option>Montada, precisa revisar</option><option>Vem desmontada</option></select></label>
+            <label>Data da consulta<input name="dataConsulta" type="date" /></label>
+          </div>
+          <label class="full">Pontos positivos<textarea name="positivos" rows="3" placeholder="O que chamou sua atenção? Ex.: quadro 6061-T6, aro parede dupla..."></textarea></label>
+          <label class="full">Pontos negativos / riscos<textarea name="negativos" rows="3" placeholder="Ex.: cubos simples, garantia curta, suspensão básica..."></textarea></label>
+          <label class="full">Observações e resposta da loja<textarea name="observacoes" rows="5" placeholder="Anote promessas, detalhes, peças que podem variar, telefone da loja e o que precisa confirmar."></textarea></label>
+        </section>
+        <div class="form-actions"><span id="saveMessage" role="status">Preencha os campos: tudo será salvo automaticamente.</span><button type="button" class="danger" id="deleteBtn" hidden>Excluir bicicleta</button><button type="button" class="secondary" id="copyCurrentBtn">Copiar Markdown</button><button type="button" class="primary-button" id="doneBtn">Concluir</button></div>
+      </form>
+    </section>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
